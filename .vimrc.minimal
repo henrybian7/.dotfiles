@@ -1,0 +1,87 @@
+"""
+" color theame
+"""
+let g:alduin_Shout_Dragon_Aspect = 1
+color alduin
+
+"""
+" Basic settings
+"""
+syntax on
+set encoding=utf-8
+set tabstop=2
+set shiftwidth=2
+set softtabstop=0
+set expandtab
+set autoindent
+set smarttab
+set ruler
+set mouse=n
+set nu
+set pastetoggle=<F2>
+set hlsearch
+set incsearch
+set showmatch
+set ignorecase
+set undofile
+set undodir=~/.vim/undo//,/tmp
+set backspace=indent,eol,start
+set autoread
+set smartcase
+set foldmethod=syntax
+set relativenumber
+
+"""
+" indent line
+"""
+let g:indentLine_char = '|'
+
+"""
+" Misc Key mappings
+"""
+nnoremap <F3> :NumbersToggle<CR>
+
+" multi tabs
+nnoremap <C-N> :tabprevious<CR>
+nnoremap <C-M> :tabnext<CR>
+nnoremap <C-t> :tabnew<CR>
+inoremap <C-t> <Esc>:tabnew<CR>
+
+" splited window
+set splitbelow
+set splitright
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+nnoremap <C-H> <C-W>h
+nnoremap <C-Left> :vertical res -4<CR>
+nnoremap <C-Right> :vertical res +4<CR>
+nnoremap <C-Up> :res +2<CR>
+nnoremap <C-Down> :res -2<CR>
+
+"""
+" Toggle between relative number and line number
+"""
+function! g:ToggleNuMode()
+    if &rnu
+        set rnu!
+        set nu
+    else
+        set nu!
+        set rnu
+    endif
+endfunction
+noremap <silent><F3> :call g:ToggleNuMode()<CR>
+
+"""""
+" Brackete/Parenthesis Mapping
+"""""
+" inoremap { {}<Esc>ha
+inoremap ( ()<Esc>ha
+inoremap [ []<Esc>ha
+inoremap " ""<Esc>ha
+inoremap ' ''<Esc>ha
+
+inoremap {<CR> <CR><TAB><BS>{<CR>}<Esc>ko
+inoremap {{ <CR>{<CR>}<Esc>ko
+

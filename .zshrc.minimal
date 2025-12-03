@@ -1,0 +1,46 @@
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# custom configurations
+export EDITOR=vim
+
+#color support
+export TERM="xterm-256color"
+
+# git Related alisa
+alias g="git"
+alias ga="git add ."
+alias gc="git commit"
+alias gs="git status"
+alias gp="git push"
+
+# Custom alias
+alias htop="sudo htop"
+alias ra="ranger"
+# alias gcc="gcc -Wall -Werror -std=c99"
+alias pdb="python3 -m pdb"
+alias less="less -r"
+alias py="python3"
+alias l="ls"
+alias lsa="ls -ahl"
+alias gdiff='git log -n 2|tail -n 5 |head -n 1 | awk '"'"'{print $2}'"'|xargs git diff"
+alias nc="netcat"
+alias v="vim"
+alias g++="g++ -std=c++11"
+alias m="make"
+alias wcl="wc -l"
+alias conflicts="git diff --name-only --diff-filter=U"
+alias rsync="rsync --info=progress2"
+
+# Add custom aliases to ~/.zshrc.local, for example:
+# alias myalias="some-command"
+
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:.
+export PATH=$PATH:$HOME/.local/bin
+
+# Add custom PATH entries to ~/.zshrc.local, for example:
+# export PATH=$PATH:$HOME/your/custom/path

@@ -1,0 +1,16 @@
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
+
+# Set DEFAULT_USER to hide user@host in prompt (optional)
+# DEFAULT_USER="$USER"
+
+ZSH_THEME="ys"
+
+plugins=(git zsh-autosuggestions)
+
+source $ZSH/oh-my-zsh.sh
+
+# Customise the welcome message in ~/.zshrc.local:
+# echo "Welcome back, $USER!"
+
+alias vim="nvim"

@@ -1,0 +1,30 @@
+# Local configuration files (machine-specific, not tracked)
+*.local
+.zshrc.local
+.vimrc.local
+
+# Backup files created by install script
+*.pre.install
+
+# macOS
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# SSH private keys (NEVER commit these)
+.ssh/id_*
+.ssh/*.pem
+!.ssh/*.pub
+# But allow SSH config files
+!.ssh/config
+!.ssh/config.example
+!.ssh/authorized_keys
+
+# GPG keys
+*.gpg
+*.asc
+secring.*
+

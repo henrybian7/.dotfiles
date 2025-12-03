@@ -1,0 +1,83 @@
+# Git Configuration Example
+# =========================
+# Copy this file to ~/.gitconfig after running install.sh
+# Then update with your personal details.
+#
+# Alternatively, run these commands:
+#   git config --global user.name "Your Name"
+#   git config --global user.email "your@email.com"
+
+[user]
+	# REQUIRED: Update these with your details
+	name = Your Name
+	email = your@email.com
+	# Optional: GPG signing key (leave commented if not using)
+	# signingkey = YOUR_GPG_KEY_ID
+
+[core]
+    excludesfile = ~/.gitignoreglobal
+    editor = vim
+
+[color]
+    ui = auto
+    interactive = auto
+    ignorecase = true
+
+[push]
+    default = matching
+
+[alias]
+    s=status
+    co=checkout
+    br=branch
+    a=!git add . && git status
+    au=!git add -u . && git status
+    aa=!git add . && git add -u . && git status
+    c=commit
+    cm=commit -m
+    ca=commit --amend
+    ac=!git add . && git commit
+    acm=!git add . && git commit -m
+    l=log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+    ll=log --stat --abbrev-commit
+    lg=log --color --graph --pretty=format:'%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    llg=log --color --graph --pretty=format:'%C(bold white)%H %d%Creset%n%s%n%+b%C(bold blue)%an <%ae>%Creset %C(bold green)%cr (%ci)' --abbrev-commit
+    d=diff
+    master=checkout master
+    spull=svn rebase
+    spush=svn dcommit
+
+[commit]
+    # Set to true if you want to sign commits with GPG
+    # gpgsign = true
+    gpgsign = false
+
+[merge]
+    tool = vimdiff
+
+[mergetool]
+    prompt = true
+
+[mergetool "vimdiff"]
+    cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
+[diff]
+    tool = vimdiff
+
+[difftool]
+    prompt = false
+
+[difftool "vimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+
+[instaweb]
+    local = true
+    port = 8888
+
+# Uncomment and update path if using GPG
+# [gpg]
+# 	program = /usr/local/bin/gpg
+
+[init]
+	defaultBranch = main
+

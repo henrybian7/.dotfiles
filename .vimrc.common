@@ -1,0 +1,148 @@
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
+
+"""
+" indent line
+"""
+let g:indentLine_char = '┆'
+
+" tt open up a terminal below and adjust size
+nnoremap tt :belowright split <CR> :terminal <CR> :resize 15 <CR>
+
+" double <ESC> to exit terminal and back to terminal-normal mode
+tnoremap <ESC><ESC> <C-\><C-N>
+
+
+"""
+" CtrlP
+"""
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'c'
+
+
+"""
+" NERD tree (file explorer)
+"""
+" auto open nerd tree everytime when no file is opened
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" use NERD to open dir
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+" map key to toggle
+
+map <C-q> :NERDTreeToggle<CR>
+
+"""
+" vim-airline (status bar)
+"""
+" Enable powerline fonts (requires powerline-compatible font installed)
+" Set to 0 if you don't have powerline fonts
+let g:airline_powerline_fonts = 1
+let g:airline_theme='simple'
+
+
+"""
+" SimpyFold (folding for python)
+"""
+" Preview docstring in fold text 0
+let g:SimpylFold_docstring_preview=0
+" Fold docstrings	1
+let b:SimpylFold_fold_docstring=0
+" Fold imports	1
+let g:SimpylFold_fold_import=0
+
+
+"""
+" NeoSnippet
+"""
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+  endif
+
+" use tab to complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+
+"""
+" deoplete
+"""
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#syntax#min_keyword_length = 2
+
+" For deoplete-jedi python interpreter regardless of virtualenv or not
+let g:deoplete#sources#jedi#show_docstring=1
+" let g:python_host_prog = StrTrim(system('which python'))
+" let g:python3_host_prog = StrTrim(system('which python3'))
+
+
+"""
+" Language Client
+"""
+" set hidden
+"
+" let g:LanguageClient_serverCommands = {
+"     \ 'javascript': ['javascript-typescript-stdio'],
+"     \ 'python': ['pyls'],
+"     \ }
+"
+" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" " Or map each action separately
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+"""
+" Misc commands
+"""
+command RemoveTrailingSpaces %s/\s\+$//e
+command ConvertTabToSpaces %s/\t/\ \ \ \ /g
+command RefreshAll tabdo windo e!
+command SaveSession mksession! ~/session.vim
+command RestoreSession source ~/session.vim
+
+"""
+" JS autocomplete flow
+"""
+
+let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+
+if g:flow_path != 'flow not found'
+  let g:deoplete#sources#flow#flow_bin = g:flow_path
+endif
+
+"""
+" JS fixer
+"""
+let g:ale_fixers = {
+  \ 'javascript': ['eslint']
+  \ }
+
+"""
+" File extensions
+"""
+au BufRead,BufNewFile *.tpp set filetype=cpp
+
+"""
+" Override background color
+"""
+highlight Normal ctermbg=black
+
+
+"""
+" prettier
+"""
+nmap <Leader>p <Plug>(Prettier)
