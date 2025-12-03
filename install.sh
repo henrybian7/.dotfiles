@@ -92,8 +92,25 @@ function install_and_backup {
 
   if [ -e "$dest" ]
   then
-    mv "$dest" "$dest.pre.install"
-    prompt "Existing $dest backed up to $dest.pre.install"
+    # Check if it's already a symlink to our dotfiles (reinstall case)
+    if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src_abs" ]
+    then
+      prompt "Symlink $dest already points to dotfiles, skipping"
+      return 0
+    fi
+    
+    # Find a unique backup name (avoid overwriting existing backups)
+    backup_base="$dest.pre.install"
+    backup_name="$backup_base"
+    counter=1
+    while [ -e "$backup_name" ]
+    do
+      backup_name="${backup_base}.${counter}"
+      counter=$((counter + 1))
+    done
+    
+    mv "$dest" "$backup_name"
+    prompt "Existing $dest backed up to $backup_name"
   fi
 
   ln -s "$src_abs" "$dest" || die "Failed to create symlink"
@@ -198,11 +215,49 @@ install_and_backup .gitignoreglobal
 install_and_backup .config/nvim/init.vim
 install_and_backup .vimrc
 install_and_backup .vim/ftplugin
-prompt "Installing vim plugins"
-source ~/.zshrc.local
-export PATH="$PATH:$HOME/.local/bin"
-nvim +PlugInstall +qall || die "Failed to install vim plugins"
-nvim +PlugInstall +UpdateRemotePlugins +qall
+
+# Only install plugins if not in server mode (desktop mode)
+if [ -z "$DOTFILES_SERVER" ] || [ "$DOTFILES_SERVER" = "false" ]
+then
+  prompt "Installing vim-plug plugin manager"
+  
+  # Install vim-plug for neovim
+  if command -v nvim > /dev/null
+  then
+    nvim_plug_dir="$HOME/.local/share/nvim/site/autoload"
+    mkdir -p "$nvim_plug_dir"
+    curl -fsSLo "$nvim_plug_dir/plug.vim" \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim || \
+      prompt "Warning: Failed to install vim-plug for neovim"
+    
+    # Also install for regular vim if it exists
+    if command -v vim > /dev/null
+    then
+      vim_plug_dir="$HOME/.vim/autoload"
+      mkdir -p "$vim_plug_dir"
+      curl -fsSLo "$vim_plug_dir/plug.vim" \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim || \
+        prompt "Warning: Failed to install vim-plug for vim"
+    fi
+    
+    prompt "Installing vim plugins (this may take a while)..."
+    source ~/.zshrc.local 2>/dev/null || true
+    export PATH="$PATH:$HOME/.local/bin"
+    
+    # Try to install plugins, but don't fail if it doesn't work
+    if nvim +PlugInstall +qall 2>/dev/null
+    then
+      nvim +PlugUpdate +qall 2>/dev/null || true
+      prompt "Vim plugins installed successfully"
+    else
+      prompt "Warning: Failed to install vim plugins. You can install them manually later with: nvim +PlugInstall"
+    fi
+  else
+    prompt "Warning: neovim not found, skipping plugin installation"
+  fi
+else
+  prompt "Skipping vim plugin installation (server mode)"
+fi
 
 # ctags config (optional - install 'ctags' package separately if you want to use it)
 install_and_backup .ctags
