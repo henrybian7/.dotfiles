@@ -182,11 +182,7 @@ else
 fi
 
 ## Custom installed dependencies
-# prompt "Installing oh-my-zsh"
-# CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || die "Installation failed"
-
-# prompt "Installing zsh-autosuggestions"
-# git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || die "Installation failed"
+# (Oh My Zsh installation moved to after server mode question)
 
 # prompt "Installing tpm (Tmux Plugin Manager)"
 # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm || die "Installation failed"
@@ -203,10 +199,35 @@ fi
 
 
 ### 2. Install Configs
-if ! question "Is this a server installation? (minimum command line interface)"
+# Ask about server mode first
+is_server=false
+if question "Is this a server installation? (minimum command line interface)"
 then
+  is_server=true
+else
   echo "export DOTFILES_SERVER=false" >> "$HOME/.zshrc.local"
 fi
+
+# Install Oh My Zsh only in desktop mode
+if [ "$is_server" = "false" ]
+then
+  if [ ! -d "$HOME/.oh-my-zsh" ]
+  then
+    prompt "Installing oh-my-zsh"
+    CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || prompt "Warning: Failed to install oh-my-zsh"
+    
+    if [ -d "$HOME/.oh-my-zsh" ]
+    then
+      prompt "Installing zsh-autosuggestions plugin"
+      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || prompt "Warning: Failed to install zsh-autosuggestions (may already be installed)"
+    fi
+  else
+    prompt "Oh My Zsh already installed, skipping"
+  fi
+else
+  prompt "Skipping Oh My Zsh installation (server mode)"
+fi
+
 install_and_backup .zshrc
 
 install_and_backup .gitconfig
@@ -218,7 +239,7 @@ install_and_backup .vim/ftplugin
 install_and_backup .vim/colors
 
 # Only install plugins if not in server mode (desktop mode)
-if [ -z "$DOTFILES_SERVER" ] || [ "$DOTFILES_SERVER" = "false" ]
+if [ "$is_server" = "false" ]
 then
   prompt "Installing vim-plug plugin manager"
   

@@ -8,7 +8,14 @@ ZSH_THEME="ys"
 
 plugins=(git zsh-autosuggestions)
 
-source $ZSH/oh-my-zsh.sh
+# Only source Oh My Zsh if it's installed
+if [ -d "$ZSH" ] && [ -f "$ZSH/oh-my-zsh.sh" ]
+then
+  source $ZSH/oh-my-zsh.sh
+else
+  echo "Warning: Oh My Zsh not found at $ZSH. Install it with:"
+  echo "  sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
+fi
 
 # Customise the welcome message in ~/.zshrc.local:
 # echo "Welcome back, $USER!"
